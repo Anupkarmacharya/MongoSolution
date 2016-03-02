@@ -129,16 +129,7 @@ function ItemDAO(database) {
                   callback(numItems);
               }
             );
-        //  numItems = this.db.collection("item").find({"category":category}).toArray(function(err,numItems){
-        //    allNum += dc.num;
-        //  });
-        //  this.db.collection("item").find({"category":category}).count().toArray(function(err, numItems) {
-        //    // assert.equal(err,null);
-        //    // assert.notEqual(pageItem.length,0);
-        //    callback(numItems);
-        //  });
-        // console.log('count', numItems);
-        // callback(numItems);
+
     }
     this.searchItems = function(query, page, itemsPerPage, callback) {
         "use strict";
@@ -156,17 +147,34 @@ function ItemDAO(database) {
          * You will need to create a single text index on title, slogan, and description.
          *
          */
-        var item = this.createDummyItem();
+
+        // var item = this.createDummyItem();
         var items = [];
-        for (var i=0; i<5; i++) {
-            items.push(item);
-        }
-        // TODO-lab2A Replace all code above (in this method).
-        callback(items);
+
+        var query = this.db.collection('item').find( {title:{$regex:query}}).skip(page * itemsPerPage).limit(itemsPerPage).toArray(
+            function(err, dcs){
+
+            // assert.equal(err,null);
+            // assert.notEqual(dcs.length,0);
+            console.log("itemsPerPage", dcs);
+            dcs.forEach(function(dc){
+              // dc.unshift({_id: 'All', num: allNum});
+                  items.push(dc);
+            });
+              callback(items);
+          }
+        );
+
+        // for (var i=0; i<5; i++) {
+        //     items.push(item);
+        // }
+        // // TODO-lab2A Replace all code above (in this method).
+        // callback(items);
     }
     this.getNumSearchItems = function(query, callback) {
         "use strict";
         var numItems = 0;
+
         /*
         * TODO-lab2B
         *
@@ -175,7 +183,16 @@ function ItemDAO(database) {
         * to the callback function.
         *
         */
-        callback(numItems);
+
+        var valuee = this.db.collection('item').find( {title:{$regex:query}}).toArray(function(err, docs){
+
+            docs.forEach(function(doc){
+              numItems += 1;
+            });
+            callback(numItems);
+        });
+
+
     }
     this.getItem = function(itemId, callback) {
         "use strict";
@@ -186,9 +203,22 @@ function ItemDAO(database) {
          * to the callback function.
          *
          */
-        var item = this.createDummyItem();
-        // TODO-lab3 Replace all code above (in this method).
-        callback(item);
+         var item = [];
+
+         this.db.collection('item').find({_id:itemId}, {_id:0,img_url:1,title:1}).toArray(function(err, docs){
+
+           docs.forEach(function(doc){
+
+             console.log("jhdgfjdsgjgdsjfdsgfg", doc.title);
+             item.push(doc);
+           });
+           //var item = this.createDummyItem();
+           // TODO-lab3 Replace all code above (in this method).
+           callback(item);
+           //console.log("Im the one who knowks",docs);
+
+         });
+
     }
     this.getRelatedItems = function(callback) {
         "use strict";
