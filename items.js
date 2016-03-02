@@ -62,13 +62,20 @@ function ItemDAO(database) {
          *
          */
         //
+        // var pageItem = this.createDummyItem();
         var pageItems = [];
-        this.db.collection("item").find({"category":category}).skip(page * itemsPerPage).limit(itemsPerPage).
-        toArray(function(err, pageItem) {
+        // console.log("cat",category, "itemsPerPage", itemsPerPage);
+        // for (var i=0; i<5; i++) {
+        //     pageItems.push(pageItem);
+        // }
+        //  var pageSize= 2;
+        //  var query = this.db.collection("item").find("category").skip(page * itemsPerPage).limit(itemsPerPage);
+        this.db.collection("item").find({"category":category}).skip(page * itemsPerPage).limit(itemsPerPage).toArray(function(err, pageItem) {
           assert.equal(err,null);
           assert.notEqual(pageItem.length,0);
           callback(pageItem);
         });
+        //  console.log("query",this.db.collection("item").find({$category:"All"}).skip(page * itemsPerPage).limit(itemsPerPage));
         // TODO-lab1B Replace all code above (in this method).
         // callback(pageItems);
     }
