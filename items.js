@@ -36,10 +36,11 @@ function ItemDAO(database) {
       var allNum = 0;
      var query =  database.collection('item').aggregate([{$group: {_id: "$category", num: {$sum: 1}}}, {$sort: {_id: 1}}]).toArray(
           function(err, dcs){
-            assert.equal(err,null);
-            assert.notEqual(dcs.length,0);
+            // assert.equal(err,null);
+            // assert.notEqual(dcs.length,0);
             dcs.forEach(function(dc){
               allNum += dc.num;
+              // dc.unshift({_id: 'All', num: allNum});
                   categories.push(dc);
             });
             categories.unshift({_id: 'All', num: allNum});
@@ -70,11 +71,20 @@ function ItemDAO(database) {
         // }
         //  var pageSize= 2;
         //  var query = this.db.collection("item").find("category").skip(page * itemsPerPage).limit(itemsPerPage);
-        this.db.collection("item").find({"category":category}).skip(page * itemsPerPage).limit(itemsPerPage).toArray(function(err, pageItem) {
-          assert.equal(err,null);
-          assert.notEqual(pageItem.length,0);
+
+        if(category == "All"){
+        this.db.collection("item").find({},{"title":1,_id:0,img_url:1}).skip(page * itemsPerPage).limit(itemsPerPage).toArray(function(err, pageItem) {
+          // assert.equal(err,null);
+          // assert.notEqual(pageItem.length,0);
           callback(pageItem);
         });
+      } else {
+        this.db.collection("item").find({"category":category}).skip(page * itemsPerPage).limit(itemsPerPage).toArray(function(err, pageItem) {
+          // assert.equal(err,null);
+          // assert.notEqual(pageItem.length,0);
+          callback(pageItem);
+        });
+      }
         //  console.log("query",this.db.collection("item").find({$category:"All"}).skip(page * itemsPerPage).limit(itemsPerPage));
         // TODO-lab1B Replace all code above (in this method).
         // callback(pageItems);
@@ -93,7 +103,42 @@ function ItemDAO(database) {
          * getNumItems() method.
          *
          */
-        callback(numItems);
+         if(category == "All"){
+         var query = this.db.collection("item").find().toArray(
+           function(err, dcs) {
+             dcs.forEach(function(dc){
+               numItems += 1;
+             })
+           // assert.equal(err,null);
+           // assert.notEqual(pageItem.length,0);
+           callback(numItems);
+         });
+         return;
+       }
+         var query =  this.db.collection('item').find({"category":category}).toArray(
+              function(err, dcs){
+                // assert.equal(err,null);
+                // assert.notEqual(dcs.length,0);
+                dcs.forEach(function(dc){
+                  numItems += 1;
+                  console.log("dc", numItems);
+                  // numItems += dc.numItems;
+                      // categories.push(dc);
+                });
+                // categories.unshift({_id: 'All', num: allNum});
+                  callback(numItems);
+              }
+            );
+        //  numItems = this.db.collection("item").find({"category":category}).toArray(function(err,numItems){
+        //    allNum += dc.num;
+        //  });
+        //  this.db.collection("item").find({"category":category}).count().toArray(function(err, numItems) {
+        //    // assert.equal(err,null);
+        //    // assert.notEqual(pageItem.length,0);
+        //    callback(numItems);
+        //  });
+        // console.log('count', numItems);
+        // callback(numItems);
     }
     this.searchItems = function(query, page, itemsPerPage, callback) {
         "use strict";
