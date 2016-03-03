@@ -121,7 +121,7 @@ function ItemDAO(database) {
                 // assert.notEqual(dcs.length,0);
                 dcs.forEach(function(dc){
                   numItems += 1;
-                  console.log("dc", numItems);
+                  //console.log("dc", numItems);
                   // numItems += dc.numItems;
                       // categories.push(dc);
                 });
@@ -157,7 +157,7 @@ function ItemDAO(database) {
 
             // assert.equal(err,null);
             // assert.notEqual(dcs.length,0);
-            console.log("itemsPerPage", dcs);
+            //console.log("itemsPerPage", dcs);
             dcs.forEach(function(dc){
               // dc.unshift({_id: 'All', num: allNum});
                   items.push(dc);
@@ -206,16 +206,16 @@ function ItemDAO(database) {
          */
          var item = [];
 
-         this.db.collection('item').find({_id:itemId}, {_id:0,img_url:1,title:1}).toArray(function(err, docs){
+         this.db.collection('item').find({_id:itemId}).toArray(function(err, docs){
 
            docs.forEach(function(doc){
 
-             console.log("jhdgfjdsgjgdsjfdsgfg", doc.title);
-             item.push(doc);
+             callback(doc);
+             //item.push(doc);
            });
            //var item = this.createDummyItem();
            // TODO-lab3 Replace all code above (in this method).
-           callback(item);
+
            //console.log("Im the one who knowks",docs);
 
          });
