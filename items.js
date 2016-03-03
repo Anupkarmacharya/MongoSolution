@@ -151,7 +151,8 @@ function ItemDAO(database) {
         // var item = this.createDummyItem();
         var items = [];
 
-        var query = this.db.collection('item').find( {title:{$regex:query}}).skip(page * itemsPerPage).limit(itemsPerPage).toArray(
+        var query = this.db.collection('item').find( {$or:[{title:{$regex:query}},{slogan:{$regex:query}},{description:{$regex:query}}]}).skip(page * itemsPerPage).limit(itemsPerPage).toArray(
+          // db.item.find()
             function(err, dcs){
 
             // assert.equal(err,null);
@@ -184,7 +185,7 @@ function ItemDAO(database) {
         *
         */
 
-        var valuee = this.db.collection('item').find( {title:{$regex:query}}).toArray(function(err, docs){
+        var valuee = this.db.collection('item').find( {$or:[{title:{$regex:query}},{slogan:{$regex:query}},{description:{$regex:query}}]}).toArray(function(err, docs){
 
             docs.forEach(function(doc){
               numItems += 1;
