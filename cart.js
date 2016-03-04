@@ -49,16 +49,28 @@ function CartDAO(database) {
         // var dummyItem = this.createDummyItem();
         // userCart.items.push(dummyItem);
         console.log('rist');
-        this.db.collection('cart').find({userId:userId}).toArray(function(err, docs){
-
+        this.db.collection('cart').find({'userId':userId}).toArray(function(err, docs){
+          // console.log('Dsssssssssssssssssssssssssocs', docs.items);
+          // console.log('Dsssssssssssssssssssssssssocs', docs);
+          var content = [];
           docs.forEach(function(doc){
-
+            console.log('doc', doc.items);
+            content = doc.items;
+            content.forEach(function(okok){
+              console.log('do', okok);
+              userCart.items.push(okok);
+            });
             // callback(doc);
-            userCart.push(doc);
+            // userCart.items. push(doc);
+            // doc.forEach(do){
+            //   console.log('item',do.
+
+            // console.log('item', doc);
             // console.log('hello', doc);
             //item.push(doc);
+            // console.log('hello');
           });
-          callback(doc);
+          callback(userCart);
           //var item = this.createDummyItem();
           // TODO-lab3 Replace all code above (in this method).
 
