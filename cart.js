@@ -38,16 +38,37 @@ function CartDAO(database) {
         */
         // db.cart.find({userId:"558098a65133816958968d88"}).pretty()
 
+
+
+
+
         var userCart = {
             userId: userId,
             items: []
         }
-        var dummyItem = this.createDummyItem();
-        userCart.items.push(dummyItem);
+        // var dummyItem = this.createDummyItem();
+        // userCart.items.push(dummyItem);
+        console.log('rist');
+        this.db.collection('cart').find({userId:userId}).toArray(function(err, docs){
+
+          docs.forEach(function(doc){
+
+            // callback(doc);
+            userCart.push(doc);
+            // console.log('hello', doc);
+            //item.push(doc);
+          });
+          callback(doc);
+          //var item = this.createDummyItem();
+          // TODO-lab3 Replace all code above (in this method).
+
+          //console.log("Im the one who knowks",docs);
+
+        });
 
         // TODO-lab5 Replace all code above (in this method).
 
-        callback(userCart);
+        // callback(userCart);
     }
 
 
