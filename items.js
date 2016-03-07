@@ -246,24 +246,41 @@ function ItemDAO(database) {
             stars: stars,
             date: Date.now()
         }
-        var dummyItem = this.createDummyItem();
-        dummyItem.reviews = [reviewDoc];
-        callback(dummyItem);
+        // var dummyItem = this.createDummyItem();
+        // dummyItem.reviews = [reviewDoc];
+
+        //Using $push
+        var comments = this.db.collection('item').updateOne({_id:itemId}, {$push:{reviews:reviewDoc}});
+
+        //Using $addToSet
+        //var comments = this.db.collection('item').updateOne({_id:itemId}, {$addToSet:{reviews:reviewDoc}});
+
+        //Using $set
+        //db.item.updateOne({_id:12}, {$set:{reviewsd:[{name:"shirshak", class:15}]}})
+
+
+      // Using $push
+      // {$push:{reviews:{name:"shirshak", email:"shirshak@shirshak.com"}}}
+
+      // Using $addToSet
+      // db.item.updateOne({_id:8},{$addToSet:{reviews:{name:"shirshak", test:"shirshak@shirshak.com"}}})
+
+        callback(comments);
     }
-    this.createDummyItem = function() {
-        "use strict";
-        var item = {
-            _id: 1,
-            title: "Gray Hooded Sweatshirt",
-            description: "The top hooded sweatshirt we offer",
-            slogan: "Made of 100% cotton",
-            stars: 0,
-            category: "Apparel",
-            img_url: "/img/products/hoodie.jpg",
-            price: 29.99,
-            reviews: []
-        };
-        return item;
-    }
+    // this.createDummyItem = function() {
+    //     "use strict";
+    //     var item = {
+    //         _id: 1,
+    //         title: "Gray Hooded Sweatshirt",
+    //         description: "The top hooded sweatshirt we offer",
+    //         slogan: "Made of 100% cotton",
+    //         stars: 0,
+    //         category: "Apparel",
+    //         img_url: "/img/products/hoodie.jpg",
+    //         price: 29.99,
+    //         reviews: []
+    //     };
+    //     return item;
+    // }
 }
 module.exports.ItemDAO = ItemDAO;
